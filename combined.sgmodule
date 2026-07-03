@@ -28,7 +28,7 @@ youtube_response = type=http-response,pattern=^https:\/\/youtubei\.googleapis\.c
 ############################################
 # 4. SCRIPT — Locket Premium
 ############################################
-revenuecat = type=http-response, pattern=^https:\/\/api\.revenuecat\.com\/.+\/(receipts$|subscribers\/[^\/]+$), script-path=https://raw.githubusercontent.com/vuong2023/shad/main/js/Locket_Ohoang7.js, requires-body=true, max-size=-1, timeout=60
+revenuecat = type=http-response, pattern=^https:\/\/api\.revenuecat\.com\/.+\/(receipts$|subscribers\/[^\/]+$), script-path=https://github.com/ngphuc10092009-sketch/lk/blob/27cec8233ba44308431f62fe4b8e6988e4f95b6c/lk.js, requires-body=true, max-size=-1, timeout=60
 
 deleteHeader = type=http-request, pattern=^https:\/\/api\.revenuecat\.com\/.+\/(receipts|subscribers), script-path=https://raw.githubusercontent.com/vuong2023/shad/main/js/deleteHeader.js, timeout=60
 
