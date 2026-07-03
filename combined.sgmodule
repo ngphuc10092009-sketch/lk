@@ -1,0 +1,39 @@
+#!name = YoutubeRemoveAds + LocketPremium
+#!desc = Gộp Youtube Remove Ads & Unlock Locket Premium
+#!author = Gấu Loz CUTO
+
+############################################
+# 1. RULE — YouTube
+############################################
+[Rule]
+AND,((DOMAIN-SUFFIX,googlevideo.com),(PROTOCOL,UDP)),REJECT
+AND,((DOMAIN,youtubei.googleapis.com),(PROTOCOL,UDP)),REJECT
+
+############################################
+# 2. URL REWRITE — YouTube
+############################################
+[URL Rewrite]
+(^https?:\/\/[\w\-]+\.googlevideo\.com\/(?!(dclk_video_ads).+?)&ctier=L(&.+?)?),ctier,(.+) $1$2$3 302
+https?:\/\/[\w\-]+\.googlevideo\.com\/(?!(dclk_video_ads|videoplayback\?)).+&oad _ reject-200
+^https?:\/\/(www|s)\.youtube\.com\/api\/stats\/ads _ reject-200
+^https?:\/\/(www|s)\.youtube\.com\/(pagead|ptracking) _ reject-200
+^https?:\/\/s\.youtube\.com\/api\/stats\/qoe\?.+adcontext _ reject-200
+
+############################################
+# 3. SCRIPT — YouTube
+############################################
+[Script]
+youtube_response = type=http-response,pattern=^https:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/(browse|next|player|search|reel\/reel_watch_sequence|guide|account\/get_setting|get_watch),requires-body=1,max-size=-1,binary-body-mode=1,engine={{脚本执行引擎}},script-path=https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Youtube/youtube.response.js,argument={"lyricLang":"{{歌词翻译语言}}","captionLang":"{{字幕翻译语言}}","blockUpload":"{{屏蔽上传按钮}}","blockImmersive":"{{屏蔽沉浸按钮}}","debug":"{{启用调试模式}}"}
+
+############################################
+# 4. SCRIPT — Locket Premium
+############################################
+revenuecat = type=http-response, pattern=^https:\/\/api\.revenuecat\.com\/.+\/(receipts$|subscribers\/[^\/]+$), script-path=https://raw.githubusercontent.com/vuong2023/shad/main/js/Locket_Ohoang7.js, requires-body=true, max-size=-1, timeout=60
+
+deleteHeader = type=http-request, pattern=^https:\/\/api\.revenuecat\.com\/.+\/(receipts|subscribers), script-path=https://raw.githubusercontent.com/vuong2023/shad/main/js/deleteHeader.js, timeout=60
+
+############################################
+# 5. MITM — Gộp toàn bộ hostname
+############################################
+[MITM]
+hostname = %APPEND% *.googlevideo.com,googlevideo.com,www.youtube.com,s.youtube.com,youtubei.googleapis.com,api.revenuecat.com
